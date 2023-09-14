@@ -45,8 +45,9 @@
 
     <title>{% block title %}Home{% endblock %}</title>
   </head>
-  <body>
+    <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">GPX Viewer</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -56,17 +57,31 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbar">
-        <div class="navbar-nav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" id="home" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="game" href="/upload">Upload</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="highscores" href="/karte">Karte</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
           {% if user.is_authenticated %}
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-          <a class="nav-item nav-link" id="karte" href="/karte">Karte</a>
-
+          <li class="nav-item">
+            <a class="nav-link" id="logout" href="/logout">Logout</a>
+          </li>
           {% else %}
-          <a class="nav-item nav-link" id="login" href="/login">Login</a>
-          <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          <li class="nav-item">
+            <a class="nav-link" id="login" href="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          </li>
           {% endif %}
-        </div>
+        </ul>
       </div>
     </nav>
 
@@ -123,17 +138,5 @@
 
 
 
-{% block javascript %}
-    <script type="text/javascript">
-      function deleteNote(noteId) {
-  fetch("/delete-note", {
-    method: "POST",
-    body: JSON.stringify({ noteId: noteId }),
-  }).then((_res) => {
-    window.location.href = "/";
-  });
-  }
-</script>
-{% endblock %}
   </body>
 </html>
