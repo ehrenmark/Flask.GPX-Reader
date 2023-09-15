@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}
+    Upload Driver
+{% endblock %}
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 32px;
+        color: #333;
+    }
+
+    form {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        width: 300px;
+    }
+
+    label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #555;
+    }
+
+    p.message {
+        font-size: 18px;
+        color: #333;
+        margin-top: 20px;
+    }
+</style>
+
+<body>
+    <h1>Add Driver</h1>
+
+    <form method="POST" action="/add_person">
+        <label for="surname">Surname</label>
+        <input type="text" name="surname" id="surname" placeholder="Dorean" required>
+
+        <label for="firstName">First Name</label>
+        <input type="text" name="firstName" id="firstName" placeholder="John" required>
+
+        <label for="email">Email address</label>
+        <input type="email" name="email" id="email" placeholder="name@example.com" required>
+
+        <label for="nickname">Nickname</label>
+        <input type="text" name="nickname" id="nickname" placeholder="JD" required>
+
+        <button type="submit" class="btn btn-dark">Confirm Upload</button>
+    </form>
+
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+</body>
+
+{% endblock %}

@@ -3,20 +3,21 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 import requests
-
+from models import User, db, db_gpx
+from config import FlaskConfig
+from views import views
+from auth import auth
 
 app = Flask(__name__)
 
 
 
-from views import views
-from auth import auth
+
 
 app.register_blueprint(views, url_prefix="/")
 app.register_blueprint(auth, url_prefix="/")
 
-from models import User, db
-from config import FlaskConfig
+
 
 app.config.from_object(FlaskConfig)
 with app.app_context():

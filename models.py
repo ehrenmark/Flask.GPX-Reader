@@ -29,6 +29,7 @@ class Fahrzeug(db_gpx.Model):
     polkz = db_gpx.Column(db_gpx.String(150))
     fahrgestellnummer = db_gpx.Column(db_gpx.String(150))
 
+
 class Punkt(db_gpx.Model):
     ptid = db_gpx.Column(db_gpx.Integer, primary_key=True)
     lat = db_gpx.Column(db_gpx.Float)

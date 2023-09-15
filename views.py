@@ -21,19 +21,29 @@ def home():
 
     return render_template("home.html", user=current_user, username=username)
 
-@views.route('/karte', methods=['GET', 'POST'])
+@views.route('/map', methods=['GET', 'POST'])
 @login_required
-def karte():
+def map():
 
+    return render_template("map.html", user=current_user)
 
-
-    return render_template("karte.html", user=current_user)
 
 @views.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
 
+    return render_template("upload_files.html", user=current_user)
 
 
-    return render_template("upload.html", user=current_user)
+@views.route('/upload_driver', methods=['GET', 'POST'])
+@login_required
+def upload_driver():
 
+    return render_template("upload_driver.html", user=current_user)
+
+
+@views.route('/upload_vehicle', methods=['GET', 'POST'])
+@login_required
+def upload_vehicle():
+
+    return render_template("upload_vehicle.html", user=current_user)
