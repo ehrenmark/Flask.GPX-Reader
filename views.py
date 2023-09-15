@@ -29,5 +29,11 @@ def karte():
 
     return render_template("karte.html", user=current_user)
 
+@views.route('/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
 
+
+
+    return render_template("upload.html", user=current_user)
 

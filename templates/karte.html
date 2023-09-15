@@ -1,6 +1,8 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
+
 <h1 align="center">Karte</h1>
+
 
 <head>
 <meta charset="utf-8">
@@ -10,11 +12,10 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
 <style>
 body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 100%; }
 </style>
 </head>
 <body>
-<div id="map" style="width: 100%; height: 400px;"></div>
+<div id="map" style="width: 100%; height: 600px;"></div>
 <script>
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFya3RiczEiLCJhIjoiY2xtajFjMnBmMDAxZTJxb3ZtaDBmdnp3NSJ9.ixCF69SMR67sSqfhh_I-xg';
 const map = new mapboxgl.Map({
@@ -24,6 +25,7 @@ style: 'mapbox://styles/mapbox/streets-v12', // style URL
 center: [-24, 42], // starting center in [lng, lat]
 zoom: 1 // starting zoom
 });
+map.addControl(new mapboxgl.NavigationControl());
 
 // Add geolocate control to the map.
 map.addControl(
@@ -40,6 +42,5 @@ showUserHeading: true
 </script>
 
 </body>
-
 
 {% endblock %}
