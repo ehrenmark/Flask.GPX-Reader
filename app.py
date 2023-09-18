@@ -3,19 +3,18 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 import requests
-from models import User, db, db_gpx
+from models import User, db
 from config import FlaskConfig
 from views import views
 from auth import auth
+from upload_vehicle import upload_vehicle
 
 app = Flask(__name__)
 
 
-
-
-
 app.register_blueprint(views, url_prefix="/")
 app.register_blueprint(auth, url_prefix="/")
+app.register_blueprint(upload_vehicle, url_prefix="/")
 
 
 
@@ -23,7 +22,6 @@ app.config.from_object(FlaskConfig)
 with app.app_context():
     db.init_app(app)
     db.create_all()
-
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'

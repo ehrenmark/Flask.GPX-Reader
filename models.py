@@ -6,9 +6,6 @@ from sqlalchemy.sql import func
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
-db_gpx = SQLAlchemy()
-DB_GPX_NAME = "gpx_daten.db"
-
 
 
 class User(db.Model, UserMixin):
@@ -17,26 +14,26 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
 
-class Person(db_gpx.Model):
-    pid = db_gpx.Column(db_gpx.Integer, primary_key=True)
-    nick = db_gpx.Column(db_gpx.String(150))
-    name = db_gpx.Column(db_gpx.String(150))
-    vorname = db_gpx.Column(db_gpx.String(150))
-    email = db_gpx.Column(db_gpx.String(150), unique=True)
+class Person(db.Model):
+    pid = db.Column(db.Integer, primary_key=True)
+    nick = db.Column(db.String(150))
+    name = db.Column(db.String(150))
+    vorname = db.Column(db.String(150))
+    email = db.Column(db.String(150), unique=True)
 
-class Fahrzeug(db_gpx.Model):
-    fzid = db_gpx.Column(db_gpx.Integer, primary_key=True)
-    polkz = db_gpx.Column(db_gpx.String(150))
-    fahrgestellnummer = db_gpx.Column(db_gpx.String(150))
+class Fahrzeug(db.Model):
+    fzid = db.Column(db.Integer, primary_key=True)
+    polkz = db.Column(db.String(150))
+    fahrgestellnummer = db.Column(db.String(150))
 
 
-class Punkt(db_gpx.Model):
-    ptid = db_gpx.Column(db_gpx.Integer, primary_key=True)
-    lat = db_gpx.Column(db_gpx.Float)
-    lon = db_gpx.Column(db_gpx.Float)
-    ele = db_gpx.Column(db_gpx.Float)
-    dt = db_gpx.Column(db_gpx.DateTime)
+class Punkt(db.Model):
+    ptid = db.Column(db.Integer, primary_key=True)
+    lat = db.Column(db.Float)
+    lon = db.Column(db.Float)
+    ele = db.Column(db.Float)
+    dt = db.Column(db.DateTime)
 
 class Track:
-    tid = db_gpx.Column(db_gpx.Integer, primary_key=True)
-    dateiname = db_gpx.Column(db_gpx.String(150))
+    tid = db.Column(db.Integer, primary_key=True)
+    dateiname = db.Column(db.String(150))
