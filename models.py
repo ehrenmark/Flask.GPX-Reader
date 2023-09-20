@@ -24,7 +24,7 @@ class Driver(db.Model):
 class Vehicle(db.Model):
     fzid = db.Column(db.Integer, primary_key=True)
     polkz = db.Column(db.String(150))
-    fahrgestellnummer = db.Column(db.String(150))
+    vin = db.Column(db.String(150))
 
 
 class Waypoint(db.Model):

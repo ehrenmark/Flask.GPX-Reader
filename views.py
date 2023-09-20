@@ -28,11 +28,7 @@ def map():
     return render_template("map.html", user=current_user)
 
 
-@views.route('/upload', methods=['GET', 'POST'])
-@login_required
-def upload():
 
-    return render_template("upload_files.html", user=current_user)
 
 
 
