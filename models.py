@@ -14,20 +14,20 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
 
-class Person(db.Model):
+class Driver(db.Model):
     pid = db.Column(db.Integer, primary_key=True)
     nick = db.Column(db.String(150))
-    name = db.Column(db.String(150))
-    vorname = db.Column(db.String(150))
+    surname = db.Column(db.String(150))
+    forename = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
 
-class Fahrzeug(db.Model):
+class Vehicle(db.Model):
     fzid = db.Column(db.Integer, primary_key=True)
     polkz = db.Column(db.String(150))
     fahrgestellnummer = db.Column(db.String(150))
 
 
-class Punkt(db.Model):
+class Waypoint(db.Model):
     ptid = db.Column(db.Integer, primary_key=True)
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)

@@ -8,6 +8,7 @@ from config import FlaskConfig
 from views import views
 from auth import auth
 from upload_vehicle import upload_vehicle
+from upload_driver import upload_driver
 
 app = Flask(__name__)
 
@@ -15,6 +16,8 @@ app = Flask(__name__)
 app.register_blueprint(views, url_prefix="/")
 app.register_blueprint(auth, url_prefix="/")
 app.register_blueprint(upload_vehicle, url_prefix="/")
+app.register_blueprint(upload_driver, url_prefix="/")
+
 
 
 

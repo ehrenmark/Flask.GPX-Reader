@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from models import Fahrzeug
+from models import Vehicle
 from models import db
 
 
@@ -16,7 +16,7 @@ def upload_vehicle_in_db():
         fahrgestellnummer = request.form.get('vin')
 
         if polkz and fahrgestellnummer:
-            new_vehicle = Fahrzeug(polkz=polkz, fahrgestellnummer=fahrgestellnummer)
+            new_vehicle = Vehicle(polkz=polkz, fahrgestellnummer=fahrgestellnummer)
             db.session.add(new_vehicle)
             db.session.commit()
 
