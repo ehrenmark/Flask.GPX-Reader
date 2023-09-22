@@ -13,6 +13,22 @@ def upload_files_to_db():
     driver_list = get_drivers()
     vehicle_list = get_vehicles()
 
+    if request.method == 'POST':
+        file = request.form.get('file')
+        driver_pid = request.form.get('driver')
+        vehicle_fzid = request.form.get('vehicle')
+
+
+
+        if file and driver_pid and vehicle_fzid:
+            #new_track = Track(filename=filename)
+            #db.session.add(new_track)
+            #db.session.commit()
+
+            flash('Datei wurde erfolgreich hochgeladen.', 'success')
+            return redirect(url_for('upload_vehicle.upload_vehicle_in_db'))
+
+
 
     return render_template("upload_files.html",
                            user=current_user,
@@ -45,3 +61,5 @@ def get_vehicles():
         }
         vehicle_list.append(vehicle_dict)
     return vehicle_list
+
+

@@ -71,14 +71,14 @@
 <body>
     <h1>Add Files</h1>
 
-    <form method="POST" action="/add_person">
+    <form method="POST">
         <label for="formFileLg" class="form-label">Large file input example</label>
-        <input class="form-control form-control-lg" id="formFileLg" type="file">
+        <input class="form-control form-control-lg" id="formFileLg" type="file" name="file">
 
 
         <div class="form-group">
             <label for="vehicle">Select Driver:</label>
-            <select class="form-control" id="vehicle" name="vehicle">
+            <select class="form-control" id="driver" name="driver">
             <option>Choose...</option>
 
             {% for driver in driver_list %}

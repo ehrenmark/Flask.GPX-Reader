@@ -1,6 +1,8 @@
 
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 db = SQLAlchemy()
@@ -20,11 +22,13 @@ class Driver(db.Model):
     surname = db.Column(db.String(150))
     forename = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
+    tracks = relationship('Track', back_populates='driver')
 
 class Vehicle(db.Model):
     fzid = db.Column(db.Integer, primary_key=True)
     polkz = db.Column(db.String(150))
     vin = db.Column(db.String(150))
+    tracks = relationship('Track', back_populates='vehicle')
 
 
 class Waypoint(db.Model):
@@ -36,4 +40,13 @@ class Waypoint(db.Model):
 
 class Track:
     tid = db.Column(db.Integer, primary_key=True)
-    dateiname = db.Column(db.String(150))
+    filename = db.Column(db.String(150))
+
+    fzid = db.Column(db.Integer, db.ForeignKey('vehicle.fzid'))
+    vehicle = relationship('Vehicle', back_populates='tracks')
+
+    pid = db.Column(db.Integer, db.ForeignKey('driver.pid'))
+    driver = relationship('Driver', back_populates='tracks')
+
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
