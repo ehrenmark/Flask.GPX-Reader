@@ -11,12 +11,15 @@ upload_vehicle = Blueprint('upload_vehicle', __name__)
 @upload_vehicle.route('/upload_vehicle', methods=['GET', 'POST'])
 @login_required
 def upload_vehicle_in_db():
+
+
+
     if request.method == 'POST':
         polkz = request.form.get('license_plate')
-        fahrgestellnummer = request.form.get('vin')
+        vin = request.form.get('vin')
 
-        if polkz and fahrgestellnummer:
-            new_vehicle = Vehicle(polkz=polkz, fahrgestellnummer=fahrgestellnummer)
+        if polkz and vin:
+            new_vehicle = Vehicle(polkz=polkz, vin=vin)
             db.session.add(new_vehicle)
             db.session.commit()
 
