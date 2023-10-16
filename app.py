@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from os import path
@@ -19,7 +21,10 @@ app.register_blueprint(auth, url_prefix="/")
 app.register_blueprint(upload_vehicle, url_prefix="/")
 app.register_blueprint(upload_driver, url_prefix="/")
 app.register_blueprint(upload_files, url_prefix="/")
-
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'gpx'}
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 
 
