@@ -2,8 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from models import Waypoint, Track, Vehicle, Driver
 from models import db
-
-
+import gpxpy
 
 upload_files = Blueprint('upload_files', __name__)
 
@@ -24,6 +23,14 @@ def upload_files_to_db():
             #new_track = Track(filename=filename)
             #db.session.add(new_track)
             #db.session.commit()
+
+            gpx_data = file.read()
+            gpx = gpxpy.parse(gpx_data)
+
+            for track in gpx.tracks:
+                for segment in track.segments:
+                    for point in segment.points:
+                        print(f"Latitude: {point.latitude}, Longitude: {point.longitude}")
 
             flash('Datei wurde erfolgreich hochgeladen.', 'success')
             return redirect(url_for('upload_vehicle.upload_vehicle_in_db'))
