@@ -35,8 +35,9 @@ class Waypoint(db.Model):
     lon = db.Column(db.Float)
     ele = db.Column(db.Float)
     dt = db.Column(db.DateTime)
+    tid = db.Column(db.Integer, db.ForeignKey('track.tid'), nullable=False)
 
-class Track:
+class Track(db.Model):
     tid = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(150))
 
