@@ -2,11 +2,74 @@
 %}
 
 <h1 align="center">Map</h1>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        text-align: center;
+    }
 
+    h1 {
+        font-size: 32px;
+        color: #333;
+    }
+
+    form {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        max-width: 1600px; /* Adjust the width here */
+        margin: 0 auto;
+    }
+
+    label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    .dropdown {
+        margin-bottom: 20px;
+    }
+
+    button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #555;
+    }
+
+    p.message {
+        font-size: 18px;
+        color: #333;
+        margin-top: 20px;
+    }
+</style>
 
 <head>
 <meta charset="utf-8">
 <title>Locate the user</title>
+
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
@@ -15,32 +78,106 @@ body { margin: 0; padding: 0; }
 </style>
 </head>
 <body>
+<form method="POST" enctype="multipart/form-data">
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-3">
+          <select class="form-select mb-3" id="driver" name="driver">
+                <option>Choose Driver...</option>
+
+                {% for driver in driver_list %}
+                    <option value="{{ driver.pid }}">
+                        {{ driver.pid }} - {{ driver.forename }} {{ driver.surname }} - {{ driver.nick }} - {{ driver.email }}
+                    </option>
+                {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select mb-3" id="vehicle" name="vehicle">
+                <option value="None">Choose Vehicle...</option>
+
+                {% for vehicle in vehicle_list %}
+                    <option value="{{ vehicle.fzid }}">
+                        {{ vehicle.fzid }} - {{ vehicle.vin }} - {{ vehicle.polkz }}
+                    </option>
+                {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <input type="date" id="datepicker_start" class="form-control" placeholder="Select a date" name="datepicker_start">
+
+        </div>
+        <div class="col-md-2">
+          <input type="date" id="datepicker_end" class="form-control" placeholder="Select a date" name="datepicker_end">
+
+        </div>
+        <div class="col-md-1">
+        <button  class="btn btn-dark">Submit</button>
+        </div>
+      </div>
+    </div>
+</form>
+
+
 <div id="map" style="width: 100%; height: 600px;"></div>
+
+
 <script>
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFya3RiczEiLCJhIjoiY2xtajFjMnBmMDAxZTJxb3ZtaDBmdnp3NSJ9.ixCF69SMR67sSqfhh_I-xg';
-const map = new mapboxgl.Map({
-container: 'map', // container ID
-// Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-style: 'mapbox://styles/mapbox/streets-v12', // style URL
-center: [-24, 42], // starting center in [lng, lat]
-zoom: 1 // starting zoom
-});
-map.addControl(new mapboxgl.NavigationControl());
+    const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+    style: 'mapbox://styles/mapbox/streets-v12', // style URL
+    center: [7.2162, 51.4818], // starting center in [lng, lat]
+    zoom: 1.5 // starting zoom
+    });
+    map.addControl(new mapboxgl.NavigationControl());
 
-// Add geolocate control to the map.
-map.addControl(
-new mapboxgl.GeolocateControl({
-positionOptions: {
-enableHighAccuracy: true
-},
-// When active the map will receive updates to the device's location as it changes.
-trackUserLocation: true,
-// Draw an arrow next to the location dot to indicate which direction the device is heading.
-showUserHeading: true
-})
-);
+    // Add geolocate control to the map.
+    map.addControl(
+    new mapboxgl.GeolocateControl({
+    positionOptions: {
+    enableHighAccuracy: true
+    },
+    // When active the map will receive updates to the device's location as it changes.
+    trackUserLocation: true,
+    // Draw an arrow next to the location dot to indicate which direction the device is heading.
+    showUserHeading: true
+    })
+    );
+
+    var waypoints_by_tid = {{ waypoints_by_tid|default('{}')|safe }};
+    if (waypoints_by_tid && Object.keys(waypoints_by_tid).length > 0) {
+        // Annahme: waypoints_by_tid ist ein Dictionary mit tid als Schlüssel und einer Liste von Waypoints als Wert
+
+
+        // Iteriere durch waypoints_by_tid und erstelle Routen für jede tid
+        for (var tid in waypoints_by_tid) {
+            var waypoints = waypoints_by_tid[tid];
+            var coordinates = waypoints.map(function(waypoint) {
+                return {
+                    lng: waypoint.lon,
+                    lat: waypoint.lat
+                };
+            });
+            console.log(coordinates);
+
+
+            // Erstelle die Route auf der Karte
+            for (var i = 0; i < coordinates.length; i++) {
+                new mapboxgl.Marker()
+                    .setLngLat(coordinates[i])
+                    .addTo(map);
+            }
+        }
+    } else {
+    console.log("Keine Waypoints gefunden."); // Optional: Zeige eine Meldung, wenn keine Waypoints vorhanden sind.
+}
 </script>
-
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
 </body>
 
 {% endblock %}

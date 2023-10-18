@@ -68,13 +68,13 @@ def upload_files_to_db():
                                     tid=new_track.tid
                                 )
                                 db.session.add(new_track_segment_point)
-                                db.session.commit()
+                            db.session.commit()
 
 
 
                     flash('Datei wurde erfolgreich hochgeladen.', 'success')
                     return redirect(url_for('upload_files.upload_files_to_db'))
-            except GPXException as e:
+            except Exception as e:
                 flash(f'Fehler beim Upload der Datei: {file.filename}: {e}', 'error')
                 return redirect(url_for('upload_files.upload_files_to_db'))
         else:

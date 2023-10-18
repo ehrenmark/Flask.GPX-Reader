@@ -12,6 +12,7 @@ from auth import auth
 from upload_vehicle import upload_vehicle
 from upload_driver import upload_driver
 from upload_files import upload_files
+from map import map
 
 app = Flask(__name__)
 
@@ -21,6 +22,8 @@ app.register_blueprint(auth, url_prefix="/")
 app.register_blueprint(upload_vehicle, url_prefix="/")
 app.register_blueprint(upload_driver, url_prefix="/")
 app.register_blueprint(upload_files, url_prefix="/")
+app.register_blueprint(map, url_prefix="/")
+
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'gpx'}
 if not os.path.exists(app.config['UPLOAD_FOLDER']):

@@ -21,11 +21,7 @@ def home():
 
     return render_template("home.html", user=current_user, username=username)
 
-@views.route('/map', methods=['GET', 'POST'])
-@login_required
-def map():
 
-    return render_template("map.html", user=current_user)
 
 
 
