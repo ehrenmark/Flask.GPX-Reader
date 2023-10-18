@@ -71,9 +71,9 @@
 <body>
     <h1>Add Files</h1>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <label for="formFileLg" class="form-label">Large file input example</label>
-        <input class="form-control form-control-lg" id="formFileLg" type="file" name="file">
+        <input class="form-control form-control-lg" id="file" type="file" name="file" accept=".gpx">
 
 
 
@@ -107,7 +107,7 @@
 
         <div style="margin-top: 10px;"></div>
 
-        <button type="submit" class="btn btn-dark">Confirm Upload</button>
+        <button  class="btn btn-dark">Confirm Upload</button>
     </form>
 
 
