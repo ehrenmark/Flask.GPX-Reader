@@ -84,7 +84,7 @@ body { margin: 0; padding: 0; }
       <div class="row">
         <div class="col-md-3">
           <select class="form-select mb-3" id="driver" name="driver">
-                <option>Choose Driver...</option>
+                <option value="None">Choose Driver...</option>
 
                 {% for driver in driver_list %}
                     <option value="{{ driver.pid }}">
@@ -105,11 +105,11 @@ body { margin: 0; padding: 0; }
           </select>
         </div>
         <div class="col-md-2">
-          <input type="date" id="datepicker_start" class="form-control" placeholder="Select a date" name="datepicker_start">
+          <input type="date" id="datepicker_start" class="form-control" placeholder="Select a date" name="datepicker_start" >
 
         </div>
         <div class="col-md-2">
-          <input type="date" id="datepicker_end" class="form-control" placeholder="Select a date" name="datepicker_end">
+          <input type="date" id="datepicker_end" class="form-control" placeholder="Select a date" name="datepicker_end" >
 
         </div>
         <div class="col-md-1">
@@ -147,6 +147,48 @@ body { margin: 0; padding: 0; }
     })
     );
 
+        map.on('load', function () {
+            map.addSource('your-data-source', {
+                type: 'geojson',
+                data: 'D:\\GitHub\\gpx_reader\\waypoints.geojson', // Provide the path to your GeoJSON file
+            });
+
+            map.addLayer({
+                id: 'your-data-layer',
+                type: 'line', // Choose the appropriate layer type (e.g., fill, line, circle)
+                source: 'your-data-source',
+                layout: {},
+                paint: {},
+            });
+        });
+
+        map.on('load', () => {
+            map.addSource('route', {
+                                'type': 'geojson',
+                                'data': {
+                                'type': 'Feature',
+                                'properties': {},
+                                'geometry': {
+                                'type': 'LineString',
+                                'coordinates': {{new_list}}
+        }
+    }
+        });
+        map.addLayer({
+                            'id': 'route',
+                            'type': 'line',
+                            'source': 'route',
+                            'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                        'line-color': '#888',
+                        'line-width': 8
+                        }
+                        });
+});
+
     var waypoints_by_tid = {{ waypoints_by_tid|default('{}')|safe }};
     if (waypoints_by_tid && Object.keys(waypoints_by_tid).length > 0) {
         // Annahme: waypoints_by_tid ist ein Dictionary mit tid als Schlüssel und einer Liste von Waypoints als Wert
@@ -173,6 +215,8 @@ body { margin: 0; padding: 0; }
         }
     } else {
     console.log("Keine Waypoints gefunden."); // Optional: Zeige eine Meldung, wenn keine Waypoints vorhanden sind.
+
+
 }
 </script>
     {% if message %}

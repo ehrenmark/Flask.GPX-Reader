@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
@@ -41,7 +41,9 @@ login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
 
-
+@app.route('/get_geojson')
+def get_geojson():
+    return send_file('path-to-your-geojson-file.geojson', as_attachment=True)
 
 @login_manager.user_loader
 def load_user(id):
