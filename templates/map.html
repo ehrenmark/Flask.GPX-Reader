@@ -147,77 +147,84 @@ body { margin: 0; padding: 0; }
     })
     );
 
+
+
+    map.on('load', () => {
+        map.addSource('route', {
+            'type': 'geojson',
+            'data': {
+                'type': 'FeatureCollection',
+                'features': [
+                    {% for list in waypoints_by_tid_for_mapbox %}
+
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': [
+                            {% for koordinaten in waypoints_by_tid_for_mapbox[list] %}
+                                {{ koordinaten }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                            ]
+                        }
+                    },
+                    {% endfor %}
+                ]
+            }
+        });
+        map.addLayer({
+            'id': 'route',
+            'type': 'line',
+            'source': 'route',
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#12aede',
+                'line-width': 8
+            }
+        });
+    });
+
+
+var coordinates = {{ first_last_coordinates }};
+
+        // Create a GeoJSON source from the coordinates
+        var geojson = {
+            type: 'FeatureCollection',
+            features: coordinates.map(function (coord) {
+                return {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: coord
+                    }
+                };
+            })
+        };
+
+        // Add a layer to the map to display the coordinates
         map.on('load', function () {
-            map.addSource('your-data-source', {
+            map.addSource('coordinates', {
                 type: 'geojson',
-                data: 'D:\\GitHub\\gpx_reader\\waypoints.geojson', // Provide the path to your GeoJSON file
+                data: geojson
             });
 
             map.addLayer({
-                id: 'your-data-layer',
-                type: 'line', // Choose the appropriate layer type (e.g., fill, line, circle)
-                source: 'your-data-source',
-                layout: {},
-                paint: {},
+                id: 'coordinates',
+                type: 'circle',
+                source: 'coordinates',
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#FF0000'
+                }
             });
         });
+</script>
 
-        map.on('load', () => {
-            map.addSource('route', {
-                                'type': 'geojson',
-                                'data': {
-                                'type': 'Feature',
-                                'properties': {},
-                                'geometry': {
-                                'type': 'LineString',
-                                'coordinates': {{new_list}}
-        }
-    }
-        });
-        map.addLayer({
-                            'id': 'route',
-                            'type': 'line',
-                            'source': 'route',
-                            'layout': {
-                            'line-join': 'round',
-                            'line-cap': 'round'
-                        },
-                        'paint': {
-                        'line-color': '#888',
-                        'line-width': 8
-                        }
-                        });
-});
-
-    var waypoints_by_tid = {{ waypoints_by_tid|default('{}')|safe }};
-    if (waypoints_by_tid && Object.keys(waypoints_by_tid).length > 0) {
-        // Annahme: waypoints_by_tid ist ein Dictionary mit tid als Schlüssel und einer Liste von Waypoints als Wert
-
-
-        // Iteriere durch waypoints_by_tid und erstelle Routen für jede tid
-        for (var tid in waypoints_by_tid) {
-            var waypoints = waypoints_by_tid[tid];
-            var coordinates = waypoints.map(function(waypoint) {
-                return {
-                    lng: waypoint.lon,
-                    lat: waypoint.lat
-                };
-            });
-            console.log(coordinates);
-
-
-            // Erstelle die Route auf der Karte
-            for (var i = 0; i < coordinates.length; i++) {
-                new mapboxgl.Marker()
-                    .setLngLat(coordinates[i])
-                    .addTo(map);
-            }
-        }
-    } else {
-    console.log("Keine Waypoints gefunden."); // Optional: Zeige eine Meldung, wenn keine Waypoints vorhanden sind.
-
-
-}
+</body>
+</html>
 </script>
     {% if message %}
         <p class="message">{{ message }}</p>

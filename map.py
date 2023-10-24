@@ -52,6 +52,7 @@ def map_function():
         tid_list = [row[0] for row in result]
 
         waypoints_by_tid = {}
+        waypoints_by_tid_for_mapbox = {}
 
         for tid in tid_list:
             waypoints = db.session.query(Waypoint).filter(Waypoint.tid == tid).all()
@@ -60,80 +61,52 @@ def map_function():
 
             # Erstelle waypoints_serialized mit den gefilterten Waypoints
             waypoints_serialized = {tid: [serialize_waypoint(waypoint) for waypoint in waypoints]}
+            waypoints_by_tid[tid] = waypoints_serialized[tid]
 
-            waypoints_by_tid.update(waypoints_serialized)  # Update the dictionary with the serialized waypoints
+            new_list = [[item.lon, item.lat] for item in waypoints]
 
-        # waypoints_by_tid now contains waypoints serialized by tid
-
-        waypoints_for_geojson = []
-
-        for waypoint in waypoints:
+            waypoints_by_tid_for_mapbox[tid] = new_list
 
 
-            feature_point = {
-                                "type": "Feature",
-                                "geometry":
-                                    {
-                                        "type": "Point",
-                                        "coordinates": [waypoint.lon, waypoint.lat]
-                                    },
-                                "properties":
-                                        {
-                                            "datetime": waypoint.dt.isoformat(),
-                                            "elevation": waypoint.ele,
-                                            "name": f"Waypoint {waypoint.ptid}",
-                                            "description": f"Description for Waypoint {waypoint.ptid}"
-                                        }
-                                    }
+        first_last_coordinates = {}  # A dictionary to store first and last coordinates for each entry
 
-            waypoints_for_geojson.append(feature_point)
-
-        filtered_waypoints = {}
-
-        for tid, waypoints in waypoints_by_tid.items():
+        for key, waypoints in waypoints_by_tid.items():
             if waypoints:
-                # Sort waypoints by 'dt' (date and time)
-                sorted_waypoints = sorted(waypoints,
-                                          key=lambda waypoint: datetime.strptime(waypoint['dt'], '%Y-%m-%d %H:%M:%S'))
+                first_coordinate = waypoints[0]
+                last_coordinate = waypoints[-1]
+                first_last_coordinates[key] = {
+                    'first_coordinate': first_coordinate,
+                    'last_coordinate': last_coordinate
+                }
+        coordinate_lists = []
 
-                # Extract the first and last waypoint
-                first_waypoint = sorted_waypoints[0]
-                last_waypoint = sorted_waypoints[-1]
+        for key, coordinates in first_last_coordinates.items():
+            first_coord = coordinates['first_coordinate']
+            last_coord = coordinates['last_coordinate']
 
-                # Initialize a list to store the filtered waypoints
-                filtered = [first_waypoint, last_waypoint]
+            first_lat = first_coord['lat']
+            first_lon = first_coord['lon']
 
-                # Iterate through the sorted waypoints to find waypoints one hour apart
-                for i in range(1, len(sorted_waypoints)):
-                    current_time = datetime.strptime(sorted_waypoints[i]['dt'], '%Y-%m-%d %H:%M:%S')
-                    prev_time = datetime.strptime(sorted_waypoints[i - 1]['dt'], '%Y-%m-%d %H:%M:%S')
+            last_lat = last_coord['lat']
+            last_lon = last_coord['lon']
 
-                    # Check if the waypoints are one hour apart
-                    if (current_time - prev_time) >= timedelta(hours=1):
-                        filtered.append(sorted_waypoints[i])
-
-                filtered_waypoints[tid] = filtered
-
-        feature_collection = {
-            "type": "FeatureCollection",
-            "features": waypoints_for_geojson
-        }
-        with open("waypoints.geojson", "w") as geojson_file:
-            json.dump(feature_collection, geojson_file, indent=2)
-
-        new_list = [[item['lon'], item['lat']] for item in waypoints]
+            coordinate_lists.append([first_lon, first_lat])
+            coordinate_lists.append([last_lon, last_lat])
 
         return render_template("map.html",
                                user=current_user,
                                driver_list=driver_list,
                                vehicle_list=vehicle_list,
-                               waypoints_by_tid=filtered_waypoints,
-                               new_list = new_list)
+                               first_last_coordinates=coordinate_lists,
+                               waypoints_by_tid_for_mapbox=waypoints_by_tid_for_mapbox)
 
     return render_template("map.html",
                            user=current_user,
                            driver_list=driver_list,
-                           vehicle_list=vehicle_list)
+                           vehicle_list=vehicle_list,
+                           first_last_coordinates=[],
+                           waypoints_by_tid_for_mapbox=[]
+                           )
 
 
 def serialize_waypoint(waypoint):
