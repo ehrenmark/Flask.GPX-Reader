@@ -93,14 +93,14 @@ def map_function():
             coordinate_lists.append([first_lon, first_lat])
             coordinate_lists.append([last_lon, last_lat])
 
-        return render_template("map.html",
+        return render_template("map2.html",
                                user=current_user,
                                driver_list=driver_list,
                                vehicle_list=vehicle_list,
                                first_last_coordinates=coordinate_lists,
                                waypoints_by_tid_for_mapbox=waypoints_by_tid_for_mapbox)
 
-    return render_template("map.html",
+    return render_template("map2.html",
                            user=current_user,
                            driver_list=driver_list,
                            vehicle_list=vehicle_list,
